@@ -125,7 +125,7 @@
   const center = node('g', {'aria-hidden':'true'});
   node('circle', {r:79,class:'map-core-circle'}, center);
   node('image', {href:'assets/actonomy_icon.png',x:-37,y:-52,width:74,height:83,preserveAspectRatio:'xMidYMid meet'}, center);
-  textNode('ACT·ONOMY',{x:0,y:51,class:'map-core-name','text-anchor':'middle'},center);
+  textNode('Act*ONOMY',{x:0,y:51,class:'map-core-name','text-anchor':'middle'},center);
 
   function drawAngle() {
     rotor.setAttribute('transform',`rotate(${state.angle})`);

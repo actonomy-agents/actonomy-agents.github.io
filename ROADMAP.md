@@ -1,4 +1,4 @@
-# Act-onomy website development
+# Act\*ONOMY website development
 
 Updated: 2026-10-15
 

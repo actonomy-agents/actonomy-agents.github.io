@@ -1,4 +1,4 @@
-# Act-onomy project website
+# Act\*ONOMY project website
 
 The project website for **How to Interpret Agent Behavior** (NeurIPS 2026), featuring an interactive taxonomy and annotated agent trajectories.
 
@@ -61,7 +61,7 @@ Public research resources link directly to the current `main` branch of `iab-act
 | SWE-agent annotations and original trajectories | [`trajectory annotation examples/case2_swe_agent_two_traces/`](https://github.com/gaojie058/iab-actonomy/tree/main/trajectory%20annotation%20examples/case2_swe_agent_two_traces) |
 | Extension instructions | [`CONTRIBUTING.md`](https://github.com/gaojie058/iab-actonomy/blob/main/CONTRIBUTING.md) |
 
-The **Get Act-onomy skills on GitHub** button opens the repository. It does not start a ZIP download, and updating the website does not require packaging the skills.
+The **Get Act\*ONOMY skills on GitHub** button opens the repository. It does not start a ZIP download, and updating the website does not require packaging the skills.
 
 The explorers read the local `data.js` snapshot. Updating the research repository or a download link does **not** automatically update the data displayed on the website. Refresh that snapshot separately when adopting new taxonomy or annotation data, and keep the displayed counts and source references consistent.
 
