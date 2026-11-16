@@ -3,7 +3,7 @@
 Organization website: https://actonomy-agents.github.io/
 
 Publish the root of `main` in `actonomy-agents/actonomy-agents.github.io`.
-Research repository: https://github.com/gaojie058/Act-onomy
+Research repository: https://github.com/gaojie058/iab-actonomy
 
 ## Edit or preview
 
@@ -16,7 +16,7 @@ The site is static HTML, CSS, and JavaScript; no build step is required.
 - `app.js`: taxonomy search and trace/annotation interactions.
 - `taxonomy-map.js` and `taxonomy-map.css`: the interactive, rotating radial map.
 - `data.js`: embedded taxonomy, codebook, and trace data.
-- `downloads/` and `reports/`: original research artifacts and supplied reports.
+- `downloads/` and `reports/`: retained snapshots and locally rendered reports. Public codebook, taxonomy, and SWE-agent annotation downloads link directly to the research repository.
 
 From the repository root:
 
@@ -40,7 +40,7 @@ definitions. The map adds no external dependencies or network requests.
 ## Sources
 
 The released taxonomy contains 10 actions, 46 subactions, and 120 leaf categories.
-The two SWE-agent reports come from `3_case_studies/case2_swe_agent_two_traces/`.
+The two SWE-agent reports come from `trajectory annotation examples/case2_swe_agent_two_traces/` in the research repository.
 The SWE-chat example `c621c551` is a supplied Claude Code report with 43 agent
 turns, 6 human inputs, and 113 quote annotations. It retains the supplied
 annotations, outcome, and original report. The explorer separates human inputs
@@ -53,25 +53,26 @@ The original NeurIPS logo is from https://neurips.cc/public/MediaKit
 Codebook and code licenses are included under `downloads/`; third-party assets
 and the supplied report retain their original attribution.
 
-## Downloadable skills
+## Research resources and downloads
 
-`downloads/actonomy-skills.zip` contains the four skills, their shared dependencies,
-canonical taxonomy, command-line entry point, report templates, and examples.
-The homepage links directly to it and includes a short usage guide. The extracted
-bundle has English/Chinese READMEs and a per-file integrity manifest.
+The canonical resource repository is https://github.com/gaojie058/iab-actonomy.
+The homepage links to its current `main` branch for:
 
-The reproducible packager lives in the sibling `Act-onomy-website` workspace:
+- Codebook CSV and taxonomy JSON under `data/taxonomy/`.
+- The repository homepage, where visitors can find all four skills under `tools/` and follow the quickstart.
+- Research datasets, skill sources, contribution instructions, and licenses.
+- SWE-agent annotated JSON under `trajectory annotation examples/case2_swe_agent_two_traces/`.
 
-```sh
-python3 ../Act-onomy-website/scripts/build_skill_downloads.py \
-  --repo /path/to/refactored-Act-onomy \
-  --output docs/downloads
-```
+The skills button opens the repository on GitHub; it does not download a ZIP.
+The old files in `downloads/` remain as snapshots; do not treat them as the current
+canonical release. The embedded `data.js` remains a website snapshot for the taxonomy
+and trajectory explorers; changing external download links does not refresh its data.
+Full HTML reports remain local so they open as interactive pages instead of GitHub
+source views. The supplied SWE-chat `c621c551` report and JSON remain local because
+no corresponding resource has been identified in the research repository.
 
-The source must use the `tools/` and `data/taxonomy/` layout. The packager reads it
-without changing it; `downloads/skills-manifest.json` identifies the exported
-bytes. The source of the current package is the separate
-`/Users/gaojie/Documents/Github/Act-onomy` checkout.
+Edit this repository directly for website changes. The sibling `Act-onomy-website`
+workspace is a historical development copy, not an automatic source for deployment.
 
 A future online trajectory-upload and personal-API-key workflow is recorded in
 [ROADMAP.md](ROADMAP.md). It is not implemented in this static release.
