@@ -30,21 +30,6 @@
   }
   const leaves = tax.flatMap(action => action.subactions.flatMap(sub => sub.instances.map(leaf => ({...leaf, action: action.name, sub: sub.name, subCode: sub.code, evidence: evidenceByCode.get(leaf.code) || []}))));
   const taxState = {action:'Planning', query:'', leaf:'T2.1.1.2'};
-  const traceState = {trace:0, turn:6, quote:2, filter:'all'};
-  const heroState = {turn:6, annotated:true};
-
-  const citation = `@misc{gao2026interpret,
-  title = {How to Interpret Agent Behavior},
-  author = {Jie Gao and Kaiser Sun and Jen-tse Huang and
-            Katherine Van Koevering and Sijie Ji and Heyuan Huang and
-            Weiyan Shi and Zhuoran Lu and Ziang Xiao and
-            Daniel Khashabi and Mark Dredze},
-  year = {2026},
-  eprint = {2605.13625},
-  archivePrefix = {arXiv},
-  primaryClass = {cs.AI},
-  url = {https://arxiv.org/abs/2605.13625}
-}`;
 
   async function copyText(text) {
     if (navigator.clipboard && window.isSecureContext) {
@@ -61,39 +46,29 @@
     return result;
   }
 
-  function renderHero() {
-    const turn = data.traces[0].turns.find(t => t.n === heroState.turn);
-    const quoteIndex = heroState.turn === 6 ? 2 : heroState.turn === 8 ? 2 : 0;
-    const annotation = turn.quotes[quoteIndex];
-    const snippets = {
-      6: 'To verify that this change resolves the issue, we should create a script that replicates the problem as described.',
-      8: "Let's run the script to see if it executes successfully without encountering the issue described.",
-      9: 'The script ran successfully and received a 200 OK response, which indicates that the issue with handling binary method strings has been resolved.'
-    };
-    const text = snippets[heroState.turn];
-    const index = text.indexOf(annotation.quote);
-    $('#hero-quote').innerHTML = heroState.annotated && index >= 0
-      ? esc(text.slice(0,index)) + `<mark>${esc(annotation.quote)}</mark>` + esc(text.slice(index + annotation.quote.length))
-      : esc(text);
-    $('#hero-turn-label').textContent = `TURN ${String(turn.n).padStart(2,'0')} · VERIFY`;
-    $('#hero-annotation').innerHTML = heroState.annotated
-      ? `<span class="annotation-path"><b>${esc(label(annotation.grp))}</b> <span aria-hidden="true"> / </span> ${esc(annotation.sub)}</span><span class="annotation-leaf">${esc(annotation.leaf)}</span>`
-      : '<span class="annotation-empty">What behavior do you see in these words?</span>';
-    for (const mode of ['raw','annotated']) {
-      const active = (mode === 'annotated') === heroState.annotated;
-      $(`#hero-${mode}`).classList.toggle('active', active);
-      $(`#hero-${mode}`).setAttribute('aria-pressed', active);
-    }
-    $$('[data-hero-turn]').forEach(button => {
-      const active = Number(button.dataset.heroTurn) === heroState.turn;
-      button.classList.toggle('active', active);
-      button.setAttribute('aria-pressed', active);
+  const copyInstall = $('#copy-install');
+  if (copyInstall) {
+    const command = $('#install-command');
+    const status = $('#install-status');
+    let resetTimer;
+    copyInstall.hidden = false;
+    copyInstall.addEventListener('click', async () => {
+      const copied = await copyText(command.textContent);
+      clearTimeout(resetTimer);
+      copyInstall.classList.toggle('is-copied', copied);
+      status.textContent = copied ? 'Install command copied.' : 'Command selected for manual copying.';
+      if (!copied) {
+        const range = document.createRange();
+        range.selectNodeContents(command);
+        const selection = window.getSelection();
+        selection.removeAllRanges();
+        selection.addRange(range);
+      }
+      resetTimer = setTimeout(() => {
+        copyInstall.classList.remove('is-copied');
+        status.textContent = '';
+      }, 2200);
     });
-  }
-  if ($('#hero-quote')) {
-  $('#hero-raw').addEventListener('click', () => {heroState.annotated = false; renderHero();});
-  $('#hero-annotated').addEventListener('click', () => {heroState.annotated = true; renderHero();});
-  $$('[data-hero-turn]').forEach(button => button.addEventListener('click', () => {heroState.turn = Number(button.dataset.heroTurn); renderHero();}));
   }
 
   function matches(leaf) {
@@ -189,183 +164,14 @@
   });
   }
 
-  function activeTrace() { return data.traces[traceState.trace]; }
-  const isHuman = turn => turn.kind === 'interaction' || turn.actor === 'human';
-  const eventId = turn => isHuman(turn) ? turn.id : `T${turn.n}`;
-  const turnQuotes = turn => turn.quotes || [];
-  const activeTurn = () => activeTrace().turns[traceState.turn - 1];
-  function selectTurn(position, quote = 0) {
-    traceState.turn = Math.max(1, Math.min(position, activeTrace().turns.length));
-    traceState.quote = quote;
-    renderTrace();
-  }
-  function selectTrace(index) {
-    traceState.trace = index;
-    traceState.filter = 'all';
-    const trace = activeTrace();
-    const initial = trace.initial_event && trace.turns.findIndex(t => eventId(t) === trace.initial_event);
-    selectTurn(trace.initial_event ? initial + 1 : index === 0 ? 6 : 16, trace.initial_event ? 0 : 2);
-  }
-  function keepTurnVisible() {
-    const scroller = $('.timeline-scroll');
-    const selected = $('.timeline-turn.active');
-    if (!selected) return;
-    const a = selected.getBoundingClientRect(), b = scroller.getBoundingClientRect();
-    if (a.left < b.left || a.right > b.right) scroller.scrollLeft += a.left - b.left - (b.width - a.width) / 2;
-  }
-  function renderTrace() {
-    const trace = activeTrace(), turn = activeTurn();
-    const human = isHuman(turn), mixed = trace.turns.some(isHuman);
-    const agentCount = trace.turns.filter(t => !isHuman(t)).length;
-    const humanCount = trace.turns.length - agentCount;
-    const count = trace.turns.reduce((n,t) => n + turnQuotes(t).length, 0);
-    $('#trace-name').textContent = trace.display_name || trace.instance_id;
-    $('#trace-model').textContent = mixed ? 'SWE-CHAT · CLAUDE CODE' : 'SWE-AGENT · GPT-4 TURBO';
-    $('#trace-meta').textContent = `${agentCount} ${mixed ? 'AGENT TURNS · ' + humanCount + ' HUMAN INPUTS' : 'TURNS'} · ${count} QUOTE ANNOTATIONS`;
-    $('#trace-report-link').href = trace.report_url;
-    $('#trace-json-link').href = trace.download_url;
-    $('#trace-source-note').textContent = mixed
-      ? 'Outcome and annotations are retained from the supplied SWE-chat report. Human inputs are shown separately from agent behavior labels; labels may extend the released taxonomy.'
-      : 'Labels describe observed behavior; they are not a quality score. Case-study labels include extensions to the released taxonomy.';
-    $('#swe-agent-note').hidden = mixed;
-    $('#swe-chat-note').hidden = !mixed;
-    $$('[data-trace]').forEach(button => {
-      const active = Number(button.dataset.trace) === traceState.trace;
-      button.classList.toggle('active', active);button.setAttribute('aria-pressed', active);
-    });
-    $('.timeline-track').style.minWidth = mixed ? `${trace.turns.length * 30}px` : '';
-    $('#timeline-instruction').textContent = mixed ? 'H = human input · T = agent turn · scroll to explore' : 'Choose a turn to inspect its evidence';
-    $('#trace-timeline').innerHTML = trace.turns.map((t,i) => {
-      const cats = [...new Set(turnQuotes(t).map(q => q.grp))];
-      const humanStep = isHuman(t), active = i + 1 === traceState.turn;
-      const dimmed = traceState.filter !== 'all' && (traceState.filter === 'human' ? !humanStep : !cats.includes(traceState.filter));
-      return `<button data-turn="${i+1}" data-event="${eventId(t)}" class="timeline-turn ${humanStep?'human-turn':''} ${active?'active':''} ${dimmed?'dimmed':''}" aria-label="${humanStep?'Human input '+t.id:'Agent turn '+t.n}: ${esc(t.headline)}" aria-pressed="${active}" title="${esc(t.headline)}"><span class="timeline-bars">${humanStep?'<b aria-hidden="true">H</b>':cats.map(group => `<i style="${style(group)}" aria-hidden="true"></i>`).join('')}</span><span>${mixed?eventId(t):String(t.n).padStart(2,'0')}</span></button>`;
-    }).join('');
-    const phaseStarts = trace.segments.map(segment => {
-      let index = trace.turns.findIndex(t => !isHuman(t) && t.n === segment.start);
-      while (index > 0 && isHuman(trace.turns[index-1])) index--;
-      return index;
-    });
-    $('#timeline-phases').innerHTML = trace.segments.map((segment,i) => {
-      const names = {'Agent locates the bug':'Locate','Agent patches the bug':'Patch','Agent verifies the fix':'Verify','Agent submits':'Submit','Agent searches for the bug':'Locate','Agent hits a dead end in helpers.py':'Investigate','Agent hits a second dead end':'Investigate','Agent finds the right spot':'Inspect','Agent patches, recovers, and submits':'Patch & submit'};
-      const length = (phaseStarts[i+1] ?? trace.turns.length) - phaseStarts[i];
-      return `<span class="timeline-phase" style="flex:${length}" title="${esc(segment.title)}">${esc(trace.phase_short_names?.[i] || names[segment.title] || segment.title)}</span>`;
-    }).join('');
-    $('#human-jumps').hidden = !mixed;
-    $('#human-jumps').innerHTML = mixed ? '<span class="mono">HUMAN INPUTS</span>' + trace.turns.map((t,i) => isHuman(t) ? `<button data-human-step="${i+1}" class="${i+1===traceState.turn?'active':''}" aria-pressed="${i+1===traceState.turn}" title="${esc(t.label)}">${esc(t.id)}</button>` : '').join('') : '';
-    const quoteCounts = {};
-    trace.turns.forEach(t => turnQuotes(t).forEach(q => quoteCounts[q.grp] = (quoteCounts[q.grp] || 0) + 1));
-    $('#trace-filters').innerHTML = `<button class="filter-chip ${traceState.filter==='all'?'active':''}" data-filter="all" aria-pressed="${traceState.filter==='all'}">${mixed?'All steps':'All actions'}</button>` + (mixed ? `<button class="filter-chip ${traceState.filter==='human'?'active':''}" data-filter="human" aria-pressed="${traceState.filter==='human'}">Human input <span>${humanCount}</span></button>` : '') + order.filter(group => quoteCounts[group]).map(group => `<button class="filter-chip ${traceState.filter===group?'active':''}" data-filter="${esc(group)}" aria-pressed="${traceState.filter===group}" style="${style(group)}" title="${quoteCounts[group]} quote annotations"><span class="category-dot"></span>${esc(label(group))}<span>${quoteCounts[group]}</span></button>`).join('');
-    $('#turn-kicker').textContent = human ? `${turn.id} · HUMAN INPUT · ${turn.label.toUpperCase()}` : `${mixed?'T'+turn.n+' · AGENT ':''}TURN ${String(turn.n).padStart(2,'0')} / ${String(agentCount).padStart(2,'0')} · ${(turn.phase_label || '').toUpperCase()}`;
-    $('#turn-title').textContent = turn.headline;
-    $('#turn-text-label').textContent = human ? 'HUMAN MESSAGE' : 'AGENT THOUGHT';
-    $('#turn-text-label').hidden = !human && !turn.thought;
-    $('#turn-thought').hidden = !human && !turn.thought;
-    $('.command-block').hidden = human || !turn.action;
-    $('.observation').hidden = human || !turn.obs;
-    $('#turn-observation').textContent = turn.obs || '';
-    $('#annotation-count').textContent = human ? 'Human input' : `${turnQuotes(turn).length} labels`;
-    $('#evidence-title').textContent = human ? 'HUMAN INTERACTION' : 'ANNOTATION → EVIDENCE';
-    $('#evidence-hint').textContent = human ? 'This is the human’s original message. Agent behavior labels appear on the following turns.' : 'Select a label to highlight its exact words in the thought or action.';
-    $('#previous-turn').disabled = traceState.turn === 1;
-    $('#next-turn').disabled = traceState.turn === trace.turns.length;
-    $('.observation').open = false;
-    const preceding = trace.turns.slice(0, traceState.turn - 1).map((t,i) => ({t,i})).filter(({t}) => isHuman(t)).pop();
-    $('#human-context').hidden = !mixed || human || !preceding;
-    if (mixed && !human && preceding) {
-      const text = preceding.t.text;
-      $('#human-context').innerHTML = `<span class="mono">LATEST HUMAN INPUT · ${esc(preceding.t.id)}</span><p>${esc(text.length > 240 ? text.slice(0,240) + '…' : text)}</p><button class="inline-link" data-human-step="${preceding.i+1}">Read the full message →</button>`;
-    }
-    renderAnnotations();
-    keepTurnVisible();
-  }
-  function renderAnnotations() {
-    const turn = activeTurn(), quotes = turnQuotes(turn);
-    if (isHuman(turn)) {
-      $('#turn-thought').textContent = turn.text;
-      $('#turn-command').textContent = '';
-      const nextPosition = traceState.turn + 1;
-      const next = activeTrace().turns[nextPosition-1];
-      $('#turn-annotations').innerHTML = `<div class="human-evidence"><span class="mono">${esc(turn.id)} · ${esc(turn.label)}</span><p>${esc(turn.headline)}</p>${next ? `<button class="inline-link" data-follow-turn="${nextPosition}">Follow the response at ${eventId(next)} →</button>` : ''}</div>`;
-      $('#selected-evidence').innerHTML = '';
-      return;
-    }
-    if (traceState.quote >= quotes.length) traceState.quote = 0;
-    $('#turn-annotations').innerHTML = quotes.map((quote, i) => `<button class="annotation-button ${i===traceState.quote?'active':''}" data-quote="${i}" aria-pressed="${i===traceState.quote}" style="${style(quote.grp)}"><span class="annotation-group"><span class="category-dot"></span>${esc(label(quote.grp))}<span class="annotation-target">${quote.target === 'action'?'ACTION':'THOUGHT'}</span></span><span class="annotation-name">${esc(quote.leaf)}</span><span class="annotation-sub">${esc(quote.sub)}</span></button>`).join('');
-    const selected = quotes[traceState.quote];
-    const target = selected?.target === 'action' ? 'action' : 'thought';
-    const text = turn[target] || '';
-    const index = selected ? text.indexOf(selected.quote) : -1;
-    const colors = groups[selected?.grp] || groups.Planning;
-    for (const [field,id] of [['thought','turn-thought'],['action','turn-command']]) {
-      const value = turn[field] || '';
-      $('#'+id).innerHTML = field === target && index >= 0
-        ? esc(value.slice(0,index)) + `<mark style="--highlight:${colors.bg};--highlight-ink:${colors.color}">${esc(selected.quote)}</mark>` + esc(value.slice(index+selected.quote.length))
-        : esc(value);
-    }
-    $('#selected-evidence').innerHTML = selected ? `<span class="mono">${index>=0?'HIGHLIGHTED IN '+target.toUpperCase():'ANNOTATED EVIDENCE'}</span><blockquote>${esc(selected.quote)}</blockquote>` : '<p>No quote annotations for this turn.</p>';
-    const command = $('#turn-command'), mark = $('mark', command);
-    command.scrollTop = mark ? mark.getBoundingClientRect().top - command.getBoundingClientRect().top + command.scrollTop - 35 : 0;
-  }
-  if ($('#traces')) {
-    $$('[data-trace]').forEach(button => button.addEventListener('click', () => selectTrace(Number(button.dataset.trace))));
-    $('#trace-timeline').addEventListener('click', event => {
-      const button = event.target.closest('[data-turn]');
-      if (!button) return;
-      const position = Number(button.dataset.turn), turn = activeTrace().turns[position-1];
-      selectTurn(position, Math.max(0,turnQuotes(turn).findIndex(q => q.grp === traceState.filter)));
-    });
-    $('#traces').addEventListener('click', event => {
-      const button = event.target.closest('[data-human-step], [data-follow-turn]');
-      if (button) { traceState.filter = 'all'; selectTurn(Number(button.dataset.humanStep || button.dataset.followTurn)); }
-    });
-    $('#trace-filters').addEventListener('click', event => {
-      const button = event.target.closest('[data-filter]');
-      if (!button) return;
-      traceState.filter = button.dataset.filter;
-      const matchesFilter = t => traceState.filter === 'human' ? isHuman(t) : turnQuotes(t).some(q => q.grp === traceState.filter);
-      if (traceState.filter !== 'all') {
-        const index = matchesFilter(activeTurn()) ? traceState.turn-1 : activeTrace().turns.findIndex(matchesFilter);
-        if (index >= 0) {
-          traceState.turn = index+1;
-          traceState.quote = Math.max(0,turnQuotes(activeTurn()).findIndex(q => q.grp === traceState.filter));
-        }
-      }
-      renderTrace();
-      $(`[data-filter="${CSS.escape(traceState.filter)}"]`).focus({preventScroll:true});
-    });
-    $('#turn-annotations').addEventListener('click', event => {const button = event.target.closest('[data-quote]');if(button){traceState.quote = Number(button.dataset.quote);renderAnnotations();}});
-    $('#previous-turn').addEventListener('click', () => {if(traceState.turn>1) selectTurn(traceState.turn-1);});
-    $('#next-turn').addEventListener('click', () => {if(traceState.turn<activeTrace().turns.length) selectTurn(traceState.turn+1);});
-    $('#compare-evidence').addEventListener('click', () => {
-      traceState.trace = traceState.trace === 0 ? 1 : 0;traceState.filter = 'all';
-      selectTurn(traceState.trace === 0 ? 9 : 16, traceState.trace === 0 ? 0 : 2);
-      $('.trace-viewer').scrollIntoView({block:'start'});
-    });
-    $('#jump-human-feedback').addEventListener('click', () => {
-      selectTrace(2);
-      $('.turn-panel').scrollIntoView({block:'start'});
-    });
-  }
-
-  if ($('#citation-text')) {
-  $('#citation-text').textContent = citation;
-  $('#copy-citation').addEventListener('click', async () => {
-    const copied = await copyText(citation);
-    $('#copy-citation').textContent = copied ? 'Copied ✓' : 'Select citation below';
-    $('#copy-status').textContent = copied ? 'BibTeX copied to clipboard.' : 'Copy failed. The citation is expanded below for manual copying.';
-    if (!copied) $('.citation-details').open = true;
-    setTimeout(() => {$('#copy-citation').innerHTML = 'Copy BibTeX <span aria-hidden="true">↗</span>';}, 2500);
-  });
-  }
   function readHash() {
     if (!$('#taxonomy')) return;
-    if (location.hash.startsWith('#traces/c621c551')) {
-      selectTrace(2);
-      const id = location.hash.split('/')[2];
-      const index = activeTrace().turns.findIndex(t => eventId(t) === id);
-      if (index >= 0) selectTurn(index + 1);
-      requestAnimationFrame(() => $('#traces').scrollIntoView({behavior:'instant'}));
+    if (location.hash === '#traces') {
+      location.replace('trajectory-reports/index.html');
+      return;
+    }
+    if (/^#traces\/c621c551(?:\/|$)/.test(location.hash)) {
+      location.replace('reports/c621c551.report.html');
       return;
     }
     const match = location.hash.match(/^#taxonomy\/(.+)$/);
@@ -389,8 +195,6 @@
     }, {rootMargin:'-20% 0px -60% 0px'});
     $$('main section[id]').forEach(section => observer.observe(section));
   }
-  if ($('#hero-quote')) renderHero();
   if ($('#taxonomy')) renderTaxonomy();
-  if ($('#traces')) renderTrace();
   readHash();
 })();

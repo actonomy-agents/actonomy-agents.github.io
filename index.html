@@ -5,14 +5,14 @@
 <title>Act*ONOMY — A Taxonomy of AI Agent Behavior</title>
 <meta name="description" content="Act*ONOMY is a taxonomy for interpreting AI agent behavior. Explore 10 actions, 46 subactions, 120 leaf categories, and real annotated trajectories.">
 <meta property="og:title" content="Act*ONOMY — A Taxonomy of AI Agent Behavior"><meta property="og:description" content="A shared vocabulary for describing and analyzing agent behavior at runtime."><meta property="og:type" content="website">
-<link rel="icon" href="assets/actonomy_icon.png"><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="academic.css?v=20261015-nav-light">
-<script defer src="data.js"></script><script defer src="app.js"></script>
+<link rel="icon" href="assets/actonomy_icon.png"><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="academic.css?v=20261123-install">
+<script defer src="data.js"></script><script defer src="app.js?v=20261123-citation"></script>
 </head><body class="home-page">
 <a class="skip-link" href="#main">Skip to content</a>
 <div class="conference-banner"><a class="conference-brand" href="https://neurips.cc/Conferences/2026" target="_blank" rel="noopener" aria-label="NeurIPS 2026 conference"><img src="assets/neurips-logo.svg" width="180" height="80" alt="Neural Information Processing Systems"><span>NeurIPS 2026</span></a></div>
 <header class="site-header"><div class="masthead">
 <a class="site-identity" href="index.html"><img src="assets/actonomy_icon.png" width="70" height="70" alt=""><span><span class="site-name">Act*ONOMY</span><span class="site-description">A Taxonomy of AI Agent Behavior</span></span></a>
-<nav class="site-nav" aria-label="Main navigation"><a href="index.html" aria-current="page">Home</a><a class="nav-button" href="browse.html#taxonomy">Act*ONOMY</a><a class="nav-button" href="browse.html#traces">Trajectory Analysis Examples</a></nav>
+<nav class="site-nav" aria-label="Main navigation"><a href="index.html" aria-current="page">Home</a><a class="nav-button" href="browse.html#taxonomy">Act*ONOMY</a><a class="nav-button" href="trajectory-reports/index.html">Trajectory Analysis Reports</a></nav>
 </div></header>
 
 <main id="main" class="reading-column">
@@ -24,48 +24,47 @@
 <span class="figure-arrow" aria-hidden="true">→</span>
 <div class="figure-step"><h3>Describe the behavior</h3><div class="figure-pane figure-taxonomy"><span class="figure-tier">Action</span><strong>Planning</strong><span class="figure-branch" aria-hidden="true">↓</span><span class="figure-tier">Subaction</span><strong>Decompose task</strong><span class="figure-branch" aria-hidden="true">↓</span><span class="figure-tier">Leaf category</span><p>Decompose into subgoals with success conditions</p></div></div>
 <span class="figure-arrow" aria-hidden="true">→</span>
-<div class="figure-step"><h3>Follow the trajectory</h3><div class="figure-pane figure-sequence"><div><span>06</span><p>Plan a check<small>Planning</small></p></div><div><span>08</span><p>Run the script<small>Executing</small></p></div><div><span>09</span><p>Check the result<small>Evaluating</small></p></div></div></div>
-<figcaption>A real agent trace, described at three levels and examined in context.</figcaption>
+<div class="figure-step">
+  <h3>Interpret the trace</h3>
+  <div class="figure-pane reader-interpretation">
+    <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path fill="currentColor" d="M13 3c3.9 0 7 3.1 7 7c0 2.8-1.6 5.2-4 6.3V21H9v-3H8c-1.1 0-2-.9-2-2v-3H4.5c-.4 0-.7-.5-.4-.8L6 9.7C6.2 5.9 9.2 3 13 3m0-2C8.4 1 4.6 4.4 4.1 8.9L2.5 11c-.6.8-.6 1.8-.2 2.6c.4.7 1 1.2 1.7 1.3V16c0 1.9 1.3 3.4 3 3.9V23h11v-5.5c2.5-1.7 4-4.4 4-7.5c0-5-4-9-9-9m1 13h-2v-1h2zm1.6-4.5c-.3.4-.6.8-1.1 1.1V12h-3v-1.4c-1.4-.8-1.9-2.7-1.1-4.1s2.7-1.9 4.1-1.1s1.9 2.7 1.1 4.1"/></svg>
+    <p>“I read this as a plan to check whether the fix works.”</p>
+  </div>
+</div>
 </figure>
 <p>Agents produce long reasoning trajectories and execution traces, but these records are often difficult to interpret at scale. Act*ONOMY connects behavior labels to quoted evidence, helping researchers, agent designers, and users examine how an agent plans, reasons, executes, evaluates, and adapts.</p>
-<p>The taxonomy was developed through <strong>Grounded Theory</strong>. The accompanying repository contains the living codebook, research datasets, automated analysis tools, and a protocol for extending the vocabulary as new agent behaviors emerge.</p>
 <div class="button-stack"><a class="button primary" href="https://arxiv.org/abs/2605.13625" target="_blank" rel="noopener">Act*ONOMY paper (Gao et al., NeurIPS 2026)</a><a class="button primary" href="https://github.com/gaojie058/iab-actonomy" target="_blank" rel="noopener">Code, data, and analysis tools</a></div>
-<div class="overview-list"><h3>Overview</h3><ul><li><strong>Purpose</strong> — Describe and analyze agent behavior at runtime.</li><li><strong>Structure</strong> — Action → Subaction → Leaf category.</li><li><strong>Evidence</strong> — Each trace annotation is linked to the words behind it.</li><li><strong>Applications</strong> — Compare behavioral profiles across agents and examine differences within a single agent’s trajectories.</li><li><strong>Extension</strong> — Adapt the codebook to behaviors in new agent systems.</li></ul><h3>The released taxonomy</h3><ul><li><strong>10 actions</strong>, including Planning, Reasoning, Executing, and Reflecting.</li><li><strong>46 subactions</strong> that distinguish more specific kinds of behavior.</li><li><strong>120 leaf categories</strong> with definitions or examples from the codebook.</li></ul></div>
+<div class="overview-list"><h3>Overview</h3><ul><li><strong>Purpose</strong> — Describe and analyze agent behavior at runtime.</li><li><strong>Structure</strong> — Action → Subaction → Leaf category.</li><li><strong>Evidence</strong> — Each trace annotation is linked to the words behind it.</li><li><strong>Applications</strong> — Compare behavioral profiles across agents and examine differences within a single agent’s trajectories.</li><li><strong><a href="https://github.com/gaojie058/iab-actonomy/blob/main/CONTRIBUTING.md#proposing-a-taxonomy-extension" target="_blank" rel="noopener">Extension</a></strong> — Adapt the codebook to behaviors in new agent systems.</li></ul></div>
 </section>
-<section id="getting-started" class="reading-section" aria-labelledby="getting-title"><h2 id="getting-title">Getting Started</h2><p>An example from a real SWE-agent trajectory. Switch between the raw text and its annotation, or follow the next steps:</p>
-    <div class="hero-visual">
-
-      <div class="demo-window">
-        <div class="window-header"><span class="window-dots" aria-hidden="true"><i></i><i></i><i></i></span><span>SWE-agent / requests-2317</span><span class="live-label">REAL TRACE</span></div>
-        <div class="demo-top"><span id="hero-turn-label" class="mono">TURN 06 · VERIFY</span><div class="segmented" aria-label="Trace display"><button id="hero-raw" aria-pressed="false">Raw</button><button id="hero-annotated" class="active" aria-pressed="true">Annotated</button></div></div>
-        <p id="hero-quote" class="demo-quote"></p>
-        <div id="hero-annotation" class="demo-annotation"></div>
-        <div class="demo-stepper" aria-label="Example turns"><button data-hero-turn="6" class="active" aria-pressed="true"><span>06</span> Plan a check</button><span class="step-connector" aria-hidden="true"></span><button data-hero-turn="8" aria-pressed="false"><span>08</span> Run the test</button><span class="step-connector" aria-hidden="true"></span><button data-hero-turn="9" aria-pressed="false"><span>09</span> Check the result</button></div>
-      </div>
-      <div class="visual-caption"><span class="caption-cross" aria-hidden="true">✳</span><span>The same trace. A new way to read it.</span><a href="browse.html#traces" aria-label="Explore the full annotated trace">Explore <span aria-hidden="true">↗</span></a></div>
-    </div>
-
-<p>Browse the complete taxonomy or explore three annotated trajectories: two SWE-agent tasks and <a href="browse.html#traces/c621c551">a SWE-chat session with human feedback</a> (best viewed on desktop).</p>
-<div class="button-stack"><a class="button primary" href="browse.html#taxonomy">Browse the Act*ONOMY taxonomy</a><a class="button primary" href="browse.html#traces">Explore annotated agent trajectories</a></div>
-<p>Download the released codebook and machine-readable taxonomy:</p><div class="button-stack"><a class="button primary" href="https://github.com/gaojie058/iab-actonomy/raw/refs/heads/main/data/taxonomy/act-onomy_codebook.csv">Download the codebook (CSV)</a><a class="button primary" href="https://github.com/gaojie058/iab-actonomy/raw/refs/heads/main/data/taxonomy/act-onomy_taxonomy.json">Download the taxonomy (JSON)</a></div></section>
-<section id="research" class="reading-section" aria-labelledby="research-title"><h2 id="research-title">How Was It Developed?</h2><p>Act*ONOMY uses a Grounded Theory approach to turn descriptions of agent behavior into a structured, extensible vocabulary.</p><ol class="method-list"><li><strong>Ground the vocabulary.</strong> Collect behavior descriptions from agent research, review their evidence, and refine category boundaries.</li><li><strong>Apply it to trajectories.</strong> Link labels to quoted evidence and examine patterns across agents and across runs.</li><li><strong>Keep it open to change.</strong> Propose new behaviors through a documented extension protocol.</li></ol><div class="button-stack"><a class="button primary" href="https://arxiv.org/html/2605.13625v1#S3" target="_blank" rel="noopener">Read about the methodology</a></div></section>
-<section id="resources" class="reading-section" aria-labelledby="tools-title">
-<h2 id="tools-title">Tools and Resources</h2>
-<p>Analyze your own trajectories with the Act*ONOMY skills. Explore the research repository for all four skills, the codebook, scripts, report templates, examples, and usage guides.</p>
-<div class="button-stack"><a class="button primary" href="https://github.com/gaojie058/iab-actonomy" target="_blank" rel="noopener">Get Act*ONOMY skills on GitHub</a></div>
-<p class="skill-requirements">Run the skills in a coding agent with Python 3.10+. Your agent performs the annotation and produces an interactive HTML report.</p>
-<details class="skill-setup"><summary>How to use the skills</summary>
-<ol><li>Follow the repository quickstart to clone the repository and install the skills.</li><li>Open the repository folder in your coding agent and add your trajectory file.</li><li>Send this prompt, replacing the example filename with your own:</li></ol>
-<pre class="skill-prompt"><code>Read tools/trace-qualitative-analyst/SKILL.md and use it to analyze my-trajectory.json. Follow the codebook, ground labels in exact quotes, and save the annotated JSON and HTML report under outputs/.</code></pre>
-<p>For a Claude Code session JSONL with human messages, use <code>tools/human-trace-qualitative-analyst/SKILL.md</code> and your session filename instead.</p>
-<p>The repository also includes skills for discovering behaviors in papers and maintaining the codebook. The discovery skill's Word builders additionally need Node.js and npm. See <a href="https://github.com/gaojie058/iab-actonomy#quickstart" target="_blank" rel="noopener">the repository quickstart</a> for installation and usage instructions.</p>
-</details>
-<p>Explore the research corpus, inspect the skill source, or extend the codebook:</p>
-<div class="button-stack"><a class="button primary" href="https://github.com/gaojie058/iab-actonomy/tree/main/tools/trace-qualitative-analyst" target="_blank" rel="noopener">View the trajectory skill source</a><a class="button primary" href="https://github.com/gaojie058/iab-actonomy/tree/main/data" target="_blank" rel="noopener">Explore the research datasets</a><a class="button primary" href="https://github.com/gaojie058/iab-actonomy/tree/main/tools/discovery-qualitative-analyst" target="_blank" rel="noopener">Discover behaviors in new papers</a><a class="button primary" href="https://github.com/gaojie058/iab-actonomy/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">Read the extension protocol</a></div>
+<section id="getting-started" class="reading-section" aria-labelledby="getting-title">
+  <h2 id="getting-title">Getting Started</h2>
+  <div class="install-line">
+    <span class="install-prompt" aria-hidden="true">$</span>
+    <code id="install-command">npx -y skills add <span>gaojie058/iab-actonomy</span> -y</code>
+    <button id="copy-install" type="button" title="Copy install command" aria-label="Copy install command" hidden><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path fill="currentColor" d="M19 21H8V7h11m0-2H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2m-3-4H4a2 2 0 0 0-2 2v14h2V3h12z"/></svg></button>
+    <span id="install-status" role="status" class="sr-only"></span>
+  </div>
 </section>
-<section id="citation" class="reading-section" aria-labelledby="cite-title"><h2 id="cite-title">Cite This Work</h2><p class="paper-title"><a href="https://arxiv.org/abs/2605.13625" target="_blank" rel="noopener"><strong>How to Interpret Agent Behavior</strong></a><br>NeurIPS 2026</p><p class="authors">Jie Gao, Kaiser Sun, Jen-tse Huang, Katherine Van Koevering, Sijie Ji, Heyuan Huang, Weiyan Shi, Zhuoran Lu, Ziang Xiao, Daniel Khashabi, and Mark Dredze</p><div class="button-stack"><button id="copy-citation" class="button primary">Copy BibTeX</button><span id="copy-status" class="sr-only" role="status"></span></div><details class="citation-details"><summary>View citation</summary><pre id="citation-text"></pre></details></section>
+<section id="citation" class="reading-section" aria-labelledby="cite-title">
+  <h2 id="cite-title">Cite This Work</h2>
+  <details open class="citation-details">
+    <summary>View citation</summary>
+    <pre id="citation-text">@misc{gao2026interpret,
+  title = {How to Interpret Agent Behavior},
+  author = {Jie Gao and Kaiser Sun and Jen-tse Huang and
+            Katherine Van Koevering and Sijie Ji and Heyuan Huang and
+            Weiyan Shi and Zhuoran Lu and Ziang Xiao and
+            Daniel Khashabi and Mark Dredze},
+  year = {2026},
+  eprint = {2605.13625},
+  archivePrefix = {arXiv},
+  primaryClass = {cs.AI},
+  url = {https://arxiv.org/abs/2605.13625}
+}</pre>
+  </details>
+</section>
 <section class="reading-section questions-section"><h2>Have Questions?</h2><p>Ask a question or share feedback through the <a href="https://github.com/gaojie058/iab-actonomy/issues" target="_blank" rel="noopener">Act*ONOMY GitHub repository</a>.</p></section>
 </main>
 <footer class="site-footer"><p>Act*ONOMY · How to Interpret Agent Behavior · NeurIPS 2026</p><p><a href="https://github.com/gaojie058/iab-actonomy" target="_blank" rel="noopener">GitHub</a><span>·</span><a href="https://github.com/gaojie058/iab-actonomy/blob/main/LICENSE-codebook" target="_blank" rel="noopener">Codebook: CC BY 4.0</a><span>·</span><a href="https://github.com/gaojie058/iab-actonomy/blob/main/LICENSE" target="_blank" rel="noopener">Tools: MIT</a></p></footer>
-<noscript><p class="noscript">The interactive explorers need JavaScript. You can still read the paper and download the codebook using the links on this page.</p></noscript>
+<noscript><p class="noscript">The interactive explorers need JavaScript. The installation command and research links are available above.</p></noscript>
 </body></html>

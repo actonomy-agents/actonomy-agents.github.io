@@ -12,7 +12,7 @@ The website includes:
 
 - **Home:** research overview, an annotation example, resource links, skill usage instructions, and citation.
 - **Taxonomy explorer:** a searchable codebook and interactive radial map covering 10 actions, 46 subactions, and 120 leaf categories.
-- **Trajectory explorer:** two SWE-agent case studies and one SWE-chat session with human feedback, with turn navigation, behavior filters, and quote-level evidence.
+- **Reports:** a catalog of annotated agent trajectories.
 
 All exploration runs in the browser. Online trajectory upload and model-based annotation are not implemented; follow the research repository's [quickstart](https://github.com/gaojie058/iab-actonomy#quickstart) to analyze your own trajectories with the skills.
 
@@ -30,15 +30,15 @@ Useful pages:
 
 - [Home](https://actonomy-agents.github.io/)
 - [Taxonomy](https://actonomy-agents.github.io/browse.html#taxonomy)
-- [Trajectory examples](https://actonomy-agents.github.io/browse.html#traces)
-- [SWE-chat example](https://actonomy-agents.github.io/browse.html#traces/c621c551)
+- [Trajectory reports](https://actonomy-agents.github.io/trajectory-reports/index.html)
+- [SWE-chat example](https://actonomy-agents.github.io/reports/c621c551.report.html)
 
 ## File layout
 
 | File or directory | Purpose |
 | --- | --- |
 | `index.html` | Homepage, resource links, skill instructions, and citation |
-| `browse.html` | Taxonomy and trajectory explorers |
+| `browse.html` | Taxonomy explorer |
 | `academic.css` | Page theme, typography, and responsive layouts |
 | `styles.css` | Shared interactive component styles |
 | `app.js` | Search, selection, trace navigation, evidence highlighting, and citation controls |
@@ -63,7 +63,7 @@ Public research resources link directly to the current `main` branch of `iab-act
 
 The **Get Act\*ONOMY skills on GitHub** button opens the repository. It does not start a ZIP download, and updating the website does not require packaging the skills.
 
-The explorers read the local `data.js` snapshot. Updating the research repository or a download link does **not** automatically update the data displayed on the website. Refresh that snapshot separately when adopting new taxonomy or annotation data, and keep the displayed counts and source references consistent.
+The taxonomy explorer reads the local `data.js` snapshot. Updating the research repository or a download link does **not** automatically update the data displayed on the website. Refresh that snapshot separately when adopting new taxonomy or annotation data, and keep the displayed counts and source references consistent.
 
 Full HTML reports remain in `reports/` so they render as interactive pages. The supplemental SWE-chat example `c621c551` also retains its local annotated JSON; it is not currently linked to an equivalent file in the research repository. Other files in `downloads/`, including the earlier skills ZIP, are retained snapshots rather than the current public download source.
 
