@@ -61,11 +61,15 @@ Public research resources link directly to the current `main` branch of `iab-act
 | SWE-agent annotations and original trajectories | [`trajectory annotation examples/case2_swe_agent_two_traces/`](https://github.com/gaojie058/iab-actonomy/tree/main/trajectory%20annotation%20examples/case2_swe_agent_two_traces) |
 | Extension instructions | [`CONTRIBUTING.md`](https://github.com/gaojie058/iab-actonomy/blob/main/CONTRIBUTING.md) |
 
-The **Get Act\*ONOMY skills on GitHub** button opens the repository. It does not start a ZIP download, and updating the website does not require packaging the skills.
+The homepage command installs the current trajectory analysis skill directly from the research repository.
+
+```sh
+npx -y skills add gaojie058/iab-actonomy -y
+```
 
 The taxonomy explorer reads the local `data.js` snapshot. Updating the research repository or a download link does **not** automatically update the data displayed on the website. Refresh that snapshot separately when adopting new taxonomy or annotation data, and keep the displayed counts and source references consistent.
 
-Full HTML reports remain in `reports/` so they render as interactive pages. The supplemental SWE-chat example `c621c551` also retains its local annotated JSON; it is not currently linked to an equivalent file in the research repository. Other files in `downloads/`, including the earlier skills ZIP, are retained snapshots rather than the current public download source.
+Full HTML reports remain in `reports/` so they render as interactive pages. The supplemental SWE-chat example `c621c551` also retains its local annotated JSON; it is not currently linked to an equivalent file in the research repository. The other files in `downloads/` preserve the study’s data snapshots and their provenance.
 
 ## Maintain and publish
 
